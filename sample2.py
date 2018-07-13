@@ -50,8 +50,8 @@ loss = tf.reduce_mean(tf.square(ys - prediction))
 
 # 5.选择 optimizer 使 loss 达到最小
 # 这一行定义了用什么方式去减少 loss，学习率是 0.1
-# train_step = tf.train.AdamOptimizer(0.1).minimize(loss)
-train_step = tf.train.AdagradOptimizer(0.3).minimize(loss)
+train_step = tf.train.AdamOptimizer(0.1).minimize(loss)
+# train_step = tf.train.AdagradOptimizer(0.3).minimize(loss)
 
 # important step 对所有变量进行初始化
 init = tf.global_variables_initializer()
