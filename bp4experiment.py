@@ -58,10 +58,15 @@ class BPNN:
                 outputs = activation_function(Wx_plus_b)
             return outputs
 
-    # 一次前馈网络预测
-    def predict(self, x_data):
+    # 前馈网络预测，内部函数
+    def __predict(self, x_data):
         with self.__graph.as_default():
             return self.__sess.run(self.__prediction, feed_dict={self.__xs: x_data})
+
+    # 一次前馈网络预测，公用预测接口，输入为doc文档路径
+    def predict(self, path):
+        data_batch = [docRead.predictData(path)]
+        return self.__predict(data_batch)[0]
 
     # 输入训练数据和标签，训练模型
     def train(self, x_data, y_data, times=10000):
@@ -114,9 +119,9 @@ if __name__ == '__main__':
     x_input, y_input = docRead.getTrainData(data_path)
 
     nn = BPNN(8, 14, 1)
-    # nn.load("./BP_test")
-    nn.train(x_input[0:180], y_input[0:180])
-    result = nn.predict(x_input[181:240])
+    nn.load("./BP_Graph")
+    # nn.train(x_input[0:180], y_input[0:180])
+    result = nn.predict(data_path + r"\实验1\文档\01.docx")
     print("result:")
     print(result)
-    # nn.save("BP_test")
+    # nn.save("BP_Graph")
