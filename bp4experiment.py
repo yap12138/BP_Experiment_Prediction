@@ -109,14 +109,15 @@ class BPNN:
 
 
 if __name__ == '__main__':
-    data_path = r'F:\495_work\Workspaces-School\学期资料\大三资料\大三下\人工智能\综合性实验\人工智能实验评分样本'
+    #data_path = r'C:\Users\Uply\Desktop\人工智能实验评分样本'
     # 训练的数据
-    x_input, y_input = docRead.getTrainData(data_path)
-
+    #x_input, y_input = docRead.getTrainData(data_path)
+    path = r'C:\Users\Uply\Desktop\人工智能实验评分样本\实验1\文档\01.doc'
+    x_input = docRead.predictData(path)
     nn = BPNN(8, 14, 1)
     nn.load("./BP_test")
-    # nn.train(x_input, y_input)
+    #nn.train(x_input, y_input)
     result = nn.predict(x_input)
     print("result:")
     print(result)
-    # nn.save("BP_test")
+    #nn.save(r"E:\python\BP_Experiment_Prediction\BP_test")

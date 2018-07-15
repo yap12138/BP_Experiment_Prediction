@@ -126,6 +126,7 @@ def getImgNum(path):
     return num
 
 
+
 #将txt中的标签转为标签集
 def txt2data(path, data):
     file = open(path)
@@ -155,6 +156,16 @@ def getTagData(dir):
 # 获取两个数组，第一个数组为样本特征值，第二个数组为标签
 def getTrainData(dir):
     return docx2data(dir), getTagData(dir)
+
+
+def predictData(path):
+    if path.endswith('.doc'):
+        doSaveAs(path)
+        path += 'x'
+    if path.endswith('.docx'):
+        return readdocx(path)
+    else:
+        return [0, 0, 0, 0, 0, 0, 0, 0]
 
 
 if __name__ == '__main__':
