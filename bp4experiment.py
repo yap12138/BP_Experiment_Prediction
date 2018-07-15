@@ -18,6 +18,8 @@ class BPNN:
 
         self.__has_load = False
 
+        self.__loss_threshold = 5.0
+
         with self.__graph.as_default():
             # 1.定义节点准备接收数据
             # define placeholder for inputs to network
@@ -39,6 +41,9 @@ class BPNN:
             # 4.选择 optimizer 使 loss 达到最小
             # 这一行定义了用什么方式去减少 loss，学习率是 0.1
             self.__train_step = tf.train.AdamOptimizer(0.1).minimize(self.__loss, name="train_step")
+
+    def __del__(self):
+        self.__sess.close()
 
     # 添加层
     def __add_layer(self, inputs, in_size, out_size, activation_function=None, weight_name=None, biases_name=None):
@@ -68,7 +73,7 @@ class BPNN:
 
         with self.__graph.as_default():
             # 如果从文件入的模型则跳过初始化步骤
-            if self.__has_load:
+            if not self.__has_load:
                 # important step 对所有变量进行初始化
                 init_op = tf.global_variables_initializer()
                 # 上面定义的都没有运算，直到 sess.run 才会开始运算
@@ -82,7 +87,12 @@ class BPNN:
                 self.__sess.run(self.__train_step, feed_dict={self.__xs: x_data[start:end], self.__ys: y_data[start:end]})
                 if i % 2000 == 0:
                     # to see the step improvement
-                    print(self.__sess.run(self.__loss, feed_dict={self.__xs: x_data, self.__ys: y_data}))
+                    loss_cur = self.__sess.run(self.__loss, feed_dict={self.__xs: x_data, self.__ys: y_data})
+                    print("at %d times, error is %f" % (i, loss_cur))
+                    if loss_cur < self.__loss_threshold:
+                        break
+            loss_cur = self.__sess.run(self.__loss, feed_dict={self.__xs: x_data, self.__ys: y_data})
+            print("at last, error is %f" % loss_cur)
 
     # 保存当前BP网络的计算图
     def save(self, path):
@@ -104,8 +114,8 @@ if __name__ == '__main__':
     x_input, y_input = docRead.getTrainData(data_path)
 
     nn = BPNN(8, 14, 1)
-    # nn.train(x_input, y_input)
     nn.load("./BP_test")
+    # nn.train(x_input, y_input)
     result = nn.predict(x_input)
     print("result:")
     print(result)
