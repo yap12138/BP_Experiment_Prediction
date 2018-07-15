@@ -1,0 +1,2 @@
+model_checkpoint_path: "E:\\python\\BP_Experiment_Prediction\\BP_test/model.ckpt"
+all_model_checkpoint_paths: "E:\\python\\BP_Experiment_Prediction\\BP_test/model.ckpt"
