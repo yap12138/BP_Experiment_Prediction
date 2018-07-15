@@ -8,12 +8,15 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # 基于BP网络模型的3层BP模型
 class BPNN:
+    # 三个参数分别为输入层，隐含层，输出层节点个数
     def __init__(self, input_n, hidden_n, output_n):
         self.__graph = tf.Graph()
         self.__sess = tf.Session(graph=self.__graph)
 
         self.__input_n = input_n
         self.__output_n = output_n
+
+        self.__has_load = False
 
         with self.__graph.as_default():
             # 1.定义节点准备接收数据
@@ -22,10 +25,10 @@ class BPNN:
             self.__ys = tf.placeholder(tf.float32, [None, output_n], name="input-y")
 
             # 2.定义神经层：隐藏层和预测层
-            # add hidden layer 输入值是 xs，在隐藏层有 14 个神经元
+            # add hidden layer 输入值是 xs，在隐藏层有 hidden_n 个神经元， （本实验最好为14个）
             l1 = self.__add_layer(self.__xs, input_n, hidden_n, activation_function=tf.nn.sigmoid,
                                   weight_name="hw1", biases_name="hb1")
-            # add output layer 输入值是隐藏层 l1，在预测层输出 1 个结果
+            # add output layer 输入值是隐藏层 l1，在预测层输出 output_n 个结果，  （本实验为1个）
             self.__prediction = self.__add_layer(l1, hidden_n, output_n, activation_function=None,
                                                  weight_name="ow1", biases_name="ob1")
 
@@ -64,12 +67,14 @@ class BPNN:
         batch_size = 8
 
         with self.__graph.as_default():
-            # important step 对所有变量进行初始化
-            init_op = tf.global_variables_initializer()
-            # 上面定义的都没有运算，直到 sess.run 才会开始运算
-            self.__sess.run(init_op)
+            # 如果从文件入的模型则跳过初始化步骤
+            if self.__has_load:
+                # important step 对所有变量进行初始化
+                init_op = tf.global_variables_initializer()
+                # 上面定义的都没有运算，直到 sess.run 才会开始运算
+                self.__sess.run(init_op)
 
-            # 迭代 1000 次学习，sess.run optimizer
+            # 迭代 times 次学习，sess.run optimizer
             for i in range(times):
                 start = (i * batch_size) % dataset_set
                 end = min(start+batch_size, dataset_set)
@@ -90,6 +95,7 @@ class BPNN:
         with self.__graph.as_default():
             saver = tf.train.Saver()
             saver.restore(self.__sess, path + "/model.ckpt")
+            self.__has_load = True
 
 
 if __name__ == '__main__':
