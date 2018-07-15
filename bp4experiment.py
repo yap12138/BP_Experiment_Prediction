@@ -114,9 +114,9 @@ if __name__ == '__main__':
     x_input, y_input = docRead.getTrainData(data_path)
 
     nn = BPNN(8, 14, 1)
-    nn.load("./BP_test")
-    # nn.train(x_input, y_input)
-    result = nn.predict(x_input)
+    # nn.load("./BP_test")
+    nn.train(x_input[0:180], y_input[0:180])
+    result = nn.predict(x_input[181:240])
     print("result:")
     print(result)
     # nn.save("BP_test")
