@@ -122,6 +122,5 @@ if __name__ == '__main__':
     nn.load("./BP_Graph")
     # nn.train(x_input[0:180], y_input[0:180])
     result = nn.predict(data_path + r"\实验1\文档\01.docx")
-    print("result:")
-    print(result)
+    print("result: %f" % result)
     # nn.save("BP_Graph")
