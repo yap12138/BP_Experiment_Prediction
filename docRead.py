@@ -10,7 +10,7 @@ import zipfile
 EnsureDispatch('Word.Application')
 
 
-#字典-将等级转为分数
+# 字典-将等级转为分数
 _switch = {
     "A+": 100,
     "A": 91,
@@ -20,7 +20,7 @@ _switch = {
 }
 
 
-#将doc转存为docx
+# 将doc转存为docx
 def doSaveAs(path):
     word = wc.Dispatch('Word.Application')
     doc = word.Documents.Open(path)  # 目标路径下的文件
@@ -45,7 +45,7 @@ def doc2docx(dir):
                     readdocx(filepath)
 
 
-#将目录下的docx转为训练输入数组
+# 将目录下的docx转为训练输入数组
 def docx2data(dir):
     list = os.listdir(dir)  # 列出文件夹下所有的目录与文件
     matofdata = []
@@ -61,7 +61,7 @@ def docx2data(dir):
     return matofdata
 
 
-#将docx文件输出为输入数组-分别为各部分的字数
+# 将docx文件输出为输入数组-分别为各部分的字数
 def readdocx(path):
     doc = docx.Document(path)
     # print(path + "   " + str(getImgNum(path)))
@@ -114,7 +114,7 @@ def readdocx(path):
     return matOfData
 
 
-#得到docx中图片的个数
+# 得到docx中图片的个数
 def getImgNum(path):
     zipf = zipfile.ZipFile(path)
     filelist = zipf.namelist()
@@ -126,8 +126,7 @@ def getImgNum(path):
     return num
 
 
-
-#将txt中的标签转为标签集
+# 将txt中的标签转为标签集
 def txt2data(path, data):
     file = open(path)
     line = file.readline()
@@ -140,7 +139,7 @@ def txt2data(path, data):
     return data
 
 
-#将目录下的txt标签输出为标签集
+# 将目录下的txt标签输出为标签集
 def getTagData(dir):
     list = os.listdir(dir)  # 列出文件夹下所有的目录与文件
     data = []
@@ -165,7 +164,7 @@ def predictData(path):
     if path.endswith('.docx'):
         return readdocx(path)
     else:
-        return [0, 0, 0, 0, 0, 0, 0, 0]
+        raise ValueError("路径无效")
 
 
 if __name__ == '__main__':
@@ -180,7 +179,7 @@ if __name__ == '__main__':
     print(len(data1))
 
     # 查看标签数据的代码
-    data = getTagData(rootdir)
-    print(data)
-    print(len(data))
+    data2 = getTagData(rootdir)
+    print(data2)
+    print(len(data2))
 
